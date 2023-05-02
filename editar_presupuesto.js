@@ -1,6 +1,6 @@
 
 let id = $('#id_venta').val();
-
+console.log("QUE HACE");
 
 $("#impuesto_id").change(function (e) {
     e.preventDefault();
