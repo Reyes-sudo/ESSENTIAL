@@ -1,0 +1,2 @@
+# ESSENTIAL
+modulos del crm
