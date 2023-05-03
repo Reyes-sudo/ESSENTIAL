@@ -14,7 +14,7 @@ $(document).ready(function () {
 const formulario = $('#form_venta')
 
 
-
+//lo que quier
 //Boton Volver
 function Volver(){
     location.href= ruta+ '/PresupuestoProductosController'
