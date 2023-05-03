@@ -8,6 +8,11 @@ $(document).ready(function () {
     combo_empleados();
     $(".select2").select2(); 
     $('#respaldo_valor_estado').val($('#estado_venta').val());
+    //cosa nueva 2
+    document.getElementById('descuento_tipo_input').value = 0;
+    var element = document.getElementById("descuento_tipo");
+    element.textContent = "0";
+    //nueva cosa nueva 2
 });
 
 //Vista Registrar_Servicio
@@ -353,34 +358,190 @@ $('#fecha_caducidad_venta').change(function (e) {
 
 });
 
+//cosa nueva 2
+//CANTIDAD DE DESCUENTO
+$('#descuento').change(function (e) { 
+    let tasa =  parseFloat($("#tasa_imp").val());
+    var element = document.getElementById("forma_descuento");
+    if($(this).val()<=0){
+        //codigo solo para el 1er intento de descuento y uso de este codigo
+        var element_verific = document.getElementById("descuento_tipo");
+        if(element_verific.textContent != ""){
+            console.log("hi");
+            //cosa nueva 3
+            if(count % 2 === 0){
+                console.log("PASO1");
+                let importe_for_tasa = parseFloat(document.getElementById("importe_tot").value);
+                
+                let tasa_impuest =  importe_for_tasa * (tasa/100);
+                tasa_impuest = parseFloat(tasa_impuest.toFixed(2));
+                $("#impuesto").html(tasa_impuest);
+                $(".impuesto").val(tasa_impuest);
+                let total_final_original = importe_for_tasa + tasa_impuest;
+    
+                document.getElementById('venta_total').innerHTML = total_final_original.toFixed(2);
+                $(".venta_total").val(total_final_original.toFixed(2));
+                total = total_final_original;
+        
+    
+                
+                var element = document.getElementById("forma_descuento");
+                element.selectedIndex = 0;
+                $('#descuento').val("");
+                document.getElementById('descuento_tipo_input').value = 0;
+                var element = document.getElementById("descuento_tipo");
+                element.textContent = "0";
+                $('#tipo_descuento_venta').val('sin descuento').trigger('change.select2');
+                $("#descuento").attr("disabled",true);
+                $("#forma_descuento").attr("disabled", true);
+            }else{
+                
+                let importeT = parseFloat(document.getElementById("importe_tot").value);  
+                document.getElementById('venta_total').innerHTML = importeT;
+                $(".venta_total").val(importeT);
+                $('#descuento').val("");
+                document.getElementById('descuento_tipo_input').value = 0;
+                var element = document.getElementById("descuento_tipo");
+                element.textContent = "0";
+                var element = document.getElementById("forma_descuento");
+                element.selectedIndex = 0;
+                $('#tipo_descuento_venta').val('sin descuento').trigger('change.select2');
+                $("#descuento").attr("disabled",true);
+                $("#forma_descuento").attr("disabled", true);
+            }
+            //fin cosa nueva 3
+            Swal.fire({
+                html: 'Advertencia: No se puede registrar descuento con monto 0, reintente',
+                icon: 'warning',
+            })
 
+        
 
+        }else{
+            console.log("HO");
+            var element = document.getElementById("forma_descuento");
+            element.selectedIndex = 0;
+            $('#descuento').val("");
+            document.getElementById('descuento_tipo_input').value = 0;
+            var element = document.getElementById("descuento_tipo");
+            element.textContent = "0";
+            $('#tipo_descuento_venta').val('sin descuento').trigger('change.select2');
+            $("#descuento").attr("disabled",true);
+            $("#forma_descuento").attr("disabled", true);
+            Swal.fire({
+                html: 'Advertencia: No se puede registrar descuento con monto 0, reintente',
+                icon: 'warning',
+            })
+        }
+
+    }else if(element.selectedIndex==1 || element.selectedIndex==2){
+        $('#forma_descuento').trigger('change');
+    }
+    
+});
+//fin cosa nueva 2
+
+//cosa nueva 2
 $('#tipo_descuento_venta').change(function (e) { 
     e.preventDefault();
+    let tasa =  parseFloat($("#tasa_imp").val());
     if($(this).val()=="sin descuento"){
-        $("#descuento").attr("disabled",true);
-        $("#forma_descuento").attr("disabled", true);
-    }else{
+        
+        //Cosa nueva 2
+        let comprobar_monto_descuento = document.getElementById('descuento').value
+        let comprobar_tipo_descuento = document.getElementById('forma_descuento').value
+
+        if(comprobar_monto_descuento != "" && comprobar_tipo_descuento != "1" && comprobar_tipo_descuento != "2"){
+            $('#descuento').val("");
+            $("#descuento").attr("disabled",true);
+            $("#forma_descuento").attr("disabled", true);
+        }else{
+
+            let descuento_temp= parseFloat($("#descuento_tipo").text());   //esta linea toma el descuento que se cargo para sumar al total si en caso se ingrese nuevo descuento
+            let total_temp = parseFloat($("#total_venta").val());
+            let total_final_original = descuento_temp+total_temp;
+            document.getElementById('venta_total').innerHTML = total_final_original.toFixed(2);
+            $(".venta_total").val(total_final_original.toFixed(2));
+            total = total_final_original;
+            
+            var element = document.getElementById("forma_descuento");
+            element.selectedIndex = 0;
+            $('#descuento').val("");
+            document.getElementById('descuento_tipo_input').value = 0;
+            var element = document.getElementById("descuento_tipo");
+            element.textContent = "0";
+            // fin cosa nueva 2
+            
+            $("#descuento").attr("disabled",true);
+            $("#forma_descuento").attr("disabled", true);
+        }
+        //cosa nueva 3
+    }else if(count % 2 === 0){
+        //cosa nueva 2
+        let x = document.getElementById('descuento_tipo_input').value
+        if(x != ""){
+
+            let importe_for_tasa = parseFloat(document.getElementById("importe_tot").value);
+            let tasa_impuest =  importe_for_tasa * (tasa/100);
+            tasa_impuest = parseFloat(tasa_impuest.toFixed(2));
+            $("#impuesto").html(tasa_impuest);
+            $(".impuesto").val(tasa_impuest);
+            let total_final_original_2 = importe_for_tasa + tasa_impuest;
+
+            document.getElementById('venta_total').innerHTML = total_final_original_2.toFixed(2);
+            $(".venta_total").val(total_final_original_2.toFixed(2));
+            total = total_final_original_2;
+            var element = document.getElementById("forma_descuento");
+            element.selectedIndex = 0;
+            $('#descuento').val("");
+            document.getElementById('descuento_tipo_input').value = 0;
+            var element = document.getElementById("descuento_tipo");
+            element.textContent = "0";
+        }
+        //fin cosa nueva 2
+        $("#descuento").attr("disabled",false);
+        $("#forma_descuento").attr("disabled", false);
+
+    }else if(count % 2 === 1){
         $("#descuento").attr("disabled",false);
         $("#forma_descuento").attr("disabled", false);
     }
+    //fin cosa nueva 3
 });
-/*
+//fin cosa nueva 2
+
+//descomentar
 $('#estado_venta').change(function (e) { 
     $('#respaldo_valor_estado').val($('#estado_venta').val());
-});*/
-let contador_igv = 0;
+});
+
 let count = 0;
 $(".sincon_igv").val(count);
 
 function sin_con_igv(){
+    //cosa nueva 2
+    var selectElement = document.getElementById("tipo_descuento_venta");
+    var selectedValue = selectElement.options[selectElement.selectedIndex].value;
+    //fin cosa nueva 2
     count++;
     if (count % 2 === 1) {
+        //cosa nueva 2
+        var element = document.getElementById("forma_descuento");
+        element.selectedIndex = 0;
+        $('#descuento').val("");
+        $("#descuento").attr("disabled", true);
+        $("#forma_descuento").attr("disabled", true);
+        //fin cosa nueva 2
         $(".sincon_igv").val(count);
         var option = document.querySelector("#tipo_descuento_venta option[value='antes impuesto']");
         option.remove();
 
         $('#tipo_descuento_venta').val('sin descuento').trigger('change.select2');
+        //cosa nueva 2
+        document.getElementById('descuento_tipo_input').value = 0;
+        var element = document.getElementById("descuento_tipo");
+        element.textContent = "0";
+        //fin cosa nueva 2
         let sumaImportes_tempor = 0;
         console.log("sin igv");
         let row = document.getElementById('myRow');
@@ -429,6 +590,19 @@ function sin_con_igv(){
         $(".venta_total").val(sumaImportes.toFixed(2));  
         $(".sincon_igv").val(count);
     }else{
+        //cosa nueva 2
+        var element = document.getElementById("forma_descuento");
+        element.selectedIndex = 0;
+        $('#descuento').val("");
+        $("#descuento").attr("disabled", true);
+        $("#forma_descuento").attr("disabled", true);
+        if(selectedValue != "sin descuento"){
+            $('#tipo_descuento_venta').val('sin descuento').trigger('change.select2');
+        }
+        document.getElementById('descuento_tipo_input').value = 0;
+        var element = document.getElementById("descuento_tipo");
+        element.textContent = "0";
+        //fin cosa nueva 2
         let sumaImportes_tempor2 = 0;
         console.log("con igv");
         var option = document.createElement("option");
@@ -637,6 +811,17 @@ function AgregarVenta() {
                 $('#stock_venta_det').val("");
                 $('#precio_venta_det').val("");
                 $("#" + tbody_datos).append(datos_fila);  
+                //cosa nueva 2
+                var element = document.getElementById("forma_descuento");
+                element.selectedIndex = 0;
+                $('#descuento').val("");
+                document.getElementById('descuento_tipo_input').value = 0;
+                var element = document.getElementById("descuento_tipo");
+                element.textContent = "0";
+                $('#tipo_descuento_venta').val('sin descuento').trigger('change.select2');
+                $("#descuento").attr("disabled",true);
+                $("#forma_descuento").attr("disabled", true);
+                //fin cosa nueva 2
             }else{
             Swal.fire({
                 html: 'No se admite registrar 2 veces el mismo articulo - Intente en la próxima compra',
@@ -701,6 +886,8 @@ function calculo_modificar(id_row) {
     $(".importes_total").val(importe_total_nuevo.toFixed(2));
 }
 
+
+
 //CALCULO DEL DESCUENTO segun   : TIPO DE DESCUENTO
 $('#forma_descuento').change(function (e) {
     e.preventDefault();
@@ -708,95 +895,195 @@ $('#forma_descuento').change(function (e) {
     let total_importe = $(".importes_total").val();
     let tipo_descto = $('#tipo_descuento_venta').val();
     let total = $(".venta_total").val();
+    //cosa nueva 2
     let descuento = parseFloat($("#descuento").val());
+    descuento = parseFloat(descuento.toFixed(2));
+    let comprobador_monto_descuento_existe = document.getElementById('descuento').value
+    if(comprobador_monto_descuento_existe != ""){
+    //fin cosa nueva 2
+        if($(this).val()=="1"){
+            //PORCENTAJE   %
+            if (tipo_descto == "antes impuesto" || tipo_descto == "despues impuesto") {
+                
+                let descuento_temp = parseFloat($("#descuento_tipo").text());   //esta linea toma el descuento que se cargo para sumar al total si en caso se ingrese nuevo descuento
+                let total_temp = parseFloat($("#total_venta").val());
+                let total_final_original = descuento_temp+total_temp;
+                document.getElementById('venta_total').innerHTML = total_final_original.toFixed(2);
+                $(".venta_total").val(total_final_original.toFixed(2));
+                total = total_final_original;
+            }
 
-    if($(this).val()=="1"){
-         //PORCENTAJE   %
-        if(tipo_descto == "antes impuesto"){     
-            if(descuento>100){  //el 100 es el descuento maximo en porcentaje
-                Swal.fire({
-                    html: 'Error: Descuento no puede superar Importe',
-                    icon: 'warning',
-                })          
-            }else{
-            let total_descuento = (total_importe*descuento)/100;    //10   %descuento(importe)
-            tasa = ((total_importe - total_descuento)*tasa)/100;    //8 igv
-            let total_con_descuento = (total_importe - total_descuento)+tasa;    //total - %descuento(importe)
-            document.getElementById('venta_total').innerHTML = total_con_descuento.toFixed(2); //imprimo el valor en html 
-            $(".venta_total").val(total_con_descuento.toFixed(2));  //imprime el valor en el input (clase)
-            $("#descuento_tipo").html(total_descuento.toFixed(2)); //imprime el valor de descuento en el html
-            document.getElementById('descuento_tipo_input').value = total_descuento.toFixed(2);
-            $("#impuesto").html(tasa.toFixed(2));
-            $(".impuesto").val(tasa.toFixed(2));
-            $(".importes_total").val(total_importe);
+
+            
+            if(tipo_descto == "antes impuesto"){     
+                if(descuento>100){  //el 100 es el descuento maximo en porcentaje
+
+                    //cosa nueva 2
+                        
+                    let import_tot = parseFloat($(".importes_total").val()) //solo importes
+                    let tasa_import = parseFloat((import_tot * (tasa/100)).toFixed(2));
+                    console.log(tasa_import);
+
+                    $("#impuesto").html(tasa_import);
+                    $(".impuesto").val(tasa_import);
+                    let total_total = import_tot + tasa_import;
+                    document.getElementById('venta_total').innerHTML = total_total;  //imprime el TOTAL-FINAL
+                    $(".venta_total").val(total_total);
+                    var element = document.getElementById("forma_descuento");
+                    element.selectedIndex = 0;
+                    $('#descuento').val("");
+
+                    document.getElementById('descuento_tipo_input').value = 0;
+                    var element = document.getElementById("descuento_tipo");
+                    element.textContent = "0";    
+                    //fin cosa nueva 2
+                    Swal.fire({
+                        html: 'Error: Descuento no puede superar Importe',
+                        icon: 'warning',
+                    })          
+                }else{
+                let total_descuento = (total_importe*descuento)/100;    //10   %descuento(importe)
+                tasa = ((total_importe - total_descuento)*tasa)/100;    //8 igv
+                let total_con_descuento = (total_importe - total_descuento)+tasa;    //total - %descuento(importe)
+                document.getElementById('venta_total').innerHTML = total_con_descuento.toFixed(2); //imprimo el valor en html 
+                $(".venta_total").val(total_con_descuento.toFixed(2));  //imprime el valor en el input (clase)
+                $("#descuento_tipo").html(total_descuento.toFixed(2)); //imprime el valor de descuento en el html
+                document.getElementById('descuento_tipo_input').value = total_descuento.toFixed(2);
+                $("#impuesto").html(tasa.toFixed(2));
+                $(".impuesto").val(tasa.toFixed(2));
+                $(".importes_total").val(total_importe);
+                }
+            }else if(tipo_descto == "despues impuesto"){
+                if(descuento>100){
+                    //cosa nueva 2
+                    var element = document.getElementById("forma_descuento");
+                    element.selectedIndex = 0;
+                    $('#descuento').val("");
+                    document.getElementById('descuento_tipo_input').value = 0;
+                    var element = document.getElementById("descuento_tipo");
+                    element.textContent = "0";    
+                    //fin cosa nueva 2
+
+                    Swal.fire({
+                        html: 'Error: Descuento no puede superar el Total',
+                        icon: 'warning',
+                    })
+                }else{
+                tasa = (total_importe*tasa)/100;   
+                let total_descuento = (total*descuento)/100;        //  %descuento(total)
+                total_descuento = parseFloat(total_descuento.toFixed(2));
+                let total_con_descuento = total - total_descuento;   // total - %descuento(total)
+                document.getElementById('venta_total').innerHTML = total_con_descuento.toFixed(2);  //imprime el TOTAL-FINAL
+                $(".venta_total").val(total_con_descuento.toFixed(2));  //imprime el valor en el input (clase)
+                $("#descuento_tipo").html(total_descuento.toFixed(2));  //imprime el valor de descuento en el html
+                $("#descuento_tipo_input").val(total_descuento.toFixed(2));
+                $("#impuesto").html(tasa.toFixed(2));
+                $(".impuesto").val(tasa.toFixed(2));
+                $(".importes_total").val(total_importe);
+                }
+            }else {
+                alert("sin descuento")
             }
-        }else if(tipo_descto == "despues impuesto"){
-            if(descuento>100){
-                Swal.fire({
-                    html: 'Error: Descuento no puede superar el Total',
-                    icon: 'warning',
-                })
-            }else{
-            tasa = (total_importe*tasa)/100;   
-            let total_descuento = (total*descuento)/100;        //  %descuento(total)   
-            let total_con_descuento = total - total_descuento;   // total - %descuento(total)
-            document.getElementById('venta_total').innerHTML = total_con_descuento.toFixed(2);  //imprime el TOTAL-FINAL
-            $(".venta_total").val(total_con_descuento.toFixed(2));  //imprime el valor en el input (clase)
-            $("#descuento_tipo").html(total_descuento.toFixed(2));  //imprime el valor de descuento en el html
-            $("#descuento_tipo_input").val(total_descuento.toFixed(2));
-            $("#impuesto").html(tasa.toFixed(2));
-            $(".impuesto").val(tasa.toFixed(2));
-            $(".importes_total").val(total_importe);
+            
+        }else{
+            //CANTIDAD FIJA
+
+            if (tipo_descto == "antes impuesto" || tipo_descto == "despues impuesto") {
+                
+                let descuento_temp= parseFloat($("#descuento_tipo").text());   //esta linea toma el descuento que se cargo para sumar al total si en caso se ingrese nuevo descuento
+                let total_temp = parseFloat($("#total_venta").val());
+                let total_final_original = descuento_temp+total_temp;
+                document.getElementById('venta_total').innerHTML = total_final_original.toFixed(2);
+                $(".venta_total").val(total_final_original.toFixed(2));
+                total = total_final_original;
+                
+                
             }
-        }else {
-            alert("sin descuento")
+
+
+            if(tipo_descto == "antes impuesto"){  
+
+                if(descuento>total_importe){
+                    //cosa nueva 2
+                    let import_tot = parseFloat($(".importes_total").val()) //solo importes
+                    let tasa_import = parseFloat((import_tot * (tasa/100)).toFixed(2));
+                    $("#impuesto").html(tasa_import);
+                    $(".impuesto").val(tasa_import);
+                    let total_total = import_tot + tasa_import;
+                    document.getElementById('venta_total').innerHTML = total_total;  //imprime el TOTAL-FINAL
+                    $(".venta_total").val(total_total);
+                    $('#descuento').val("");
+                    document.getElementById('descuento_tipo_input').value = 0;
+                    var element = document.getElementById("descuento_tipo");
+                    element.textContent = "0";
+                    //fin cosa nueva 2
+
+                    Swal.fire({
+                        html: 'Error: Descuento no puede superar el Importe',
+                        icon: 'warning',
+                    })
+                }else{
+                let total_descuento = total_importe - descuento;// total - descuento(importe)      
+                tasa = (total_descuento*tasa)/100;
+                let total_final =   total_descuento + tasa;
+                document.getElementById('venta_total').innerHTML = total_final.toFixed(2);
+                $(".venta_total").val(total_final.toFixed(2));
+                $("#descuento_tipo").html(descuento.toFixed(2)); //imprime el descuento en el html
+                document.getElementById('descuento_tipo_input').value = descuento.toFixed(2);
+                $("#impuesto").html(tasa.toFixed(2));
+                $(".impuesto").val(tasa.toFixed(2));
+                $(".importes_total").val(total_importe);
+                }
+                
+            }else if(tipo_descto == "despues impuesto"){
+
+                if(descuento>total){
+
+                    //cosas nuevas 2
+                    let import_tot = parseFloat($(".importes_total").val()) //solo importes
+                    let tasa_import = parseFloat((import_tot * (tasa/100)).toFixed(2));
+                    let total_total = import_tot + tasa_import;
+                    $('#descuento').val("yyy");
+                    document.getElementById('venta_total').innerHTML = total_total;
+                    document.getElementById('descuento_tipo_input').value = 0;
+                    $(".venta_total").val(total_total);
+                    var element = document.getElementById("descuento_tipo");
+                    element.textContent = "0";   
+                    //fin cosas nuevas 2
+                    
+                    Swal.fire({
+                        html: 'Error: Descuento no puede superar el Total',
+                        icon: 'warning',
+                    })
+                }else{
+                
+                tasa = (total_importe * tasa)/100;
+                let total_con_descuento = total - descuento;  // total - descuento(total)
+                document.getElementById('venta_total').innerHTML = total_con_descuento.toFixed(2);
+                $(".venta_total").val(total_con_descuento.toFixed(2));
+                $("#descuento_tipo").html(descuento.toFixed(2));
+                document.getElementById('descuento_tipo_input').value = descuento.toFixed(2);
+                $("#impuesto").html(tasa.toFixed(2));
+                $(".impuesto").val(tasa.toFixed(2));
+                $(".importes_total").val(total_importe);
+                }
+            }else {
+                alert("sin descuento")
+            }
         }
-        
+    //cosa nueva 2
     }else{
-        //CANTIDAD FIJA   
-        if(tipo_descto == "antes impuesto"){  
-
-            if(descuento>total_importe){
-                Swal.fire({
-                    html: 'Error: Descuento no puede superar el Importe',
-                    icon: 'warning',
-                })
-            }else{
-            let total_descuento = total_importe - descuento;// total - descuento(importe)      
-            tasa = (total_descuento*tasa)/100;
-            let total_final =   total_descuento + tasa;
-            document.getElementById('venta_total').innerHTML = total_final.toFixed(2);
-            $(".venta_total").val(total_final.toFixed(2));
-            $("#descuento_tipo").html(descuento.toFixed(2)); //imprime el descuento en el html
-            document.getElementById('descuento_tipo_input').value = descuento.toFixed(2);
-            $("#impuesto").html(tasa.toFixed(2));
-            $(".impuesto").val(tasa.toFixed(2));
-            $(".importes_total").val(total_importe);
-            }
-            
-        }else if(tipo_descto == "despues impuesto"){
-
-            if(descuento>total){
-                Swal.fire({
-                    html: 'Error: Descuento no puede superar el Total',
-                    icon: 'warning',
-                })
-            }else{
-            
-            tasa = (total_importe * tasa)/100;
-            let total_con_descuento = total - descuento;  // total - descuento(total)
-            document.getElementById('venta_total').innerHTML = total_con_descuento.toFixed(2);
-            $(".venta_total").val(total_con_descuento.toFixed(2));
-            $("#descuento_tipo").html(descuento.toFixed(2));
-            document.getElementById('descuento_tipo_input').value = descuento.toFixed(2);
-            $("#impuesto").html(tasa.toFixed(2));
-            $(".impuesto").val(tasa.toFixed(2));
-            $(".importes_total").val(total_importe);
-            }
-        }else {
-            alert("sin descuento")
-        }
+        var element = document.getElementById("forma_descuento");
+        element.selectedIndex = 0;
+        $("#descuento").attr("disabled",true);
+            $("#forma_descuento").attr("disabled", true);
+        $('#tipo_descuento_venta').val('sin descuento').trigger('change.select2');
+        Swal.fire({
+            html: 'Error: Debe introducir un monto antes del tipo de descuento, reintente',
+            icon: 'warning',
+        })
     }
+    //fin cosa nueva 2
 }
 );  
 
@@ -884,8 +1171,6 @@ function eliminar_venta(id_row,row) {
                     delete contadorArticulos[articulo][dato_segun_posicion];
 
                     for (let oficina in contadorArticulos) {
-                        console.log("oooooooooooooooooooooooooooo");
-                        console.log(oficina);
                         if (Object.keys(contadorArticulos[oficina]).length === 0) {
                             delete contadorArticulos[oficina];
                             var table = $("table:contains('" + oficina + "')");
@@ -940,6 +1225,25 @@ function eliminar_venta(id_row,row) {
             $("#servicio_titulo").val(JSON.stringify(contadorArticulos));
             $('#articulo_id').val('').focus();
 
+            //codigo nuevo 2
+            if(count % 2 === 1){
+
+                let import_tota = parseFloat($(".importes_total").val());
+                import_tota
+                document.getElementById('venta_total').innerHTML = import_tota;
+                $(".venta_total").val(import_tota);
+            }
+
+            var element = document.getElementById("forma_descuento");
+            element.selectedIndex = 0;
+            $('#descuento').val("");
+            document.getElementById('descuento_tipo_input').value = 0;
+            var element = document.getElementById("descuento_tipo");
+            element.textContent = "0";
+            $('#tipo_descuento_venta').val('sin descuento').trigger('change.select2');
+            $("#descuento").attr("disabled",true);
+            $("#forma_descuento").attr("disabled", true);
+            //fin codigo nuevo 2
             
         }
     });
