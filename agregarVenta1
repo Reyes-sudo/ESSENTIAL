@@ -1,0 +1,166 @@
+function AgregarVenta() {
+    let titulo_productos = document.getElementById("titulo_productos").value;
+    let titulo_productos_lower = titulo_productos.toLowerCase();
+    let stock_ingreso = document.getElementById("stock_venta_det").value;
+    let cliente_Idx = document.getElementById("tipo_cliente_id").value;
+    let agente_Idx = document.getElementById("agente_venta").value;
+    let precio_venta = document.getElementById("precio_venta_det").value; 
+    let fecha_Venta = document.getElementById("fecha_venta").value;
+    let fecha_Caducidad_Venta = document.getElementById("fecha_caducidad_venta").value;
+    let impuesto_Idx = document.getElementById("impuesto_id").value;
+    let nombre_mercancia = document.getElementById("nombre_mercancia_art").value;
+    let articulo_Idx = document.getElementById("articulo_id").value;
+    let moneda_Idx = document.getElementById("moneda_id").value;
+    let importe_det = (parseFloat(stock_ingreso)*parseFloat(precio_venta)).toFixed(2);
+    console.log("Comp-ImpIndiv: ",importe_det)
+    valorDescuento = document.getElementById("descuento").value;
+    let existe = false;
+
+    let tasa = document.getElementById('tasa_imp').value;
+    /*
+    if(nombre_mercancia!="" && moneda_Idx!="" && stock_ingreso!="" && precio_venta !="" && impuesto_Idx!=""
+    && fecha_Venta!="" && cliente_Idx!="" && agente_Idx!="" && fecha_Caducidad_Venta!="" && stock_ingreso!=""){
+        */
+        if(titulo_productos!=""){
+            if (!hasEmptied) {
+                $("#tabla_muestra").empty();
+                hasEmptied = true;
+            }
+            if (count % 2 === 1) {
+                precio_venta= parseFloat(precio_venta);
+                precio_venta = precio_venta + (precio_venta*(tasa/100));
+                precio_venta = (precio_venta).toFixed(2);
+                console.log("Nuevo pv: "+precio_venta);
+            }
+            let id_row = 'row' + cant_ventas;
+            let datos_filas=``; //codigo - fin 2 
+            
+            for (let key in contadorArticulos) {
+                if (key.toLowerCase() === titulo_productos_lower) {
+                    existe = true;
+                    titulo_productos = key;
+                    break;
+                }
+            }
+            if (!existe) {
+                contadorTitulos[titulo_productos] = {};
+                contadorTitulos[titulo_productos][cont] = true;
+                contadorArticulos[titulo_productos] = {};
+                articulo_eliminar[titulo_productos] = {};
+                let titles = Object.keys(contadorArticulos);
+                let index = titles.indexOf(titulo_productos);
+
+                tbody_datos = "tbody_ventas_" + index;
+                let estructura_tabla = `<table class="table table-striped" style="width: 100%;">   
+                                                <thead class="table-dark">
+                                                    <th colspan="6" style="background-color:#34495E;">
+                                                        <input type="text" onchange="cambiar_titulo(${cont});" id="${cont}" value="${titulo_productos}" style="width:100%; text-align:center; font-size:15px; background-color:#EAF2F8; color:#34495E;">                                                            </th>
+                                                    <tr  style="background-color:#34495E;">
+                                                        <th>#</th>
+                                                        <th>Producto</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Precio de Venta</th>
+                                                        <th>Importe </th>
+                                                        <th>Opcion </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="${tbody_datos}">     
+                                                </tbody>
+                                            </table>`;
+                $("#padre-tablas").append(estructura_tabla);
+                cont++;
+                    
+            }
+            if (!contadorArticulos[titulo_productos][articulo_Idx]) {
+                // Si no existe, establecer su valor en true
+                contadorArticulos[titulo_productos][articulo_Idx] = true;
+                let titles = Object.keys(contadorArticulos);
+                let index = titles.indexOf(titulo_productos);
+                tbody_datos = "tbody_ventas_" + index;
+                let importe_temp = 0;
+                if(count % 2 === 1){
+                    let tasax = document.getElementById('tasa_imp').value
+                    importe_temp = 0
+                    importe_temp = (parseFloat(importe_det) + ((tasax/100)*parseFloat(importe_det))).toFixed(2);
+                    datos_fila = `<tr id="${id_row}">
+                                        <td><input type="hidden" value="${cant_ventas + 1}" name="cant_ventas[]">${cant_ventas + 1}</td>
+                                        <td><input type="hidden" value="${articulo_Idx}" name="articuloId[]">${nombre_mercancia}</td>
+                                        <td><input onchange="calculo_modificar('${id_row}');" type="number" value="${stock_ingreso}" name="stock_ingreso[]"></td>
+                                        <td><input onchange="calculo_modificar('${id_row}');"type="text" value="${precio_venta}" name="precio_venta[]"></td>    
+                                        <td><input type="hidden" value="${importe_temp}" name="importe_det[]">${importe_temp}</td>
+                                        <td><a href="#" onclick="eliminar_venta('${id_row}',${cant_ventas});" class="btn btn-circle btn-sm btn-danger" title="Eliminar"><i class="fa fa-solid fa-trash"></i></a></td>
+                                    </tr>`;
+                }else{
+                    datos_fila = `<tr id="${id_row}">
+                                            <td><input type="hidden" value="${cant_ventas + 1}" name="cant_ventas[]">${cant_ventas + 1}</td>
+                                            <td><input type="hidden" value="${articulo_Idx}" name="articuloId[]">${nombre_mercancia}</td>
+                                            <td><input onchange="calculo_modificar('${id_row}');" type="number" value="${stock_ingreso}" name="stock_ingreso[]"></td>
+                                            <td><input onchange="calculo_modificar('${id_row}');"type="text" value="${precio_venta}" name="precio_venta[]"></td>    
+                                            <td><input type="hidden" value="${importe_det}" name="importe_det[]">${importe_det}</td>
+                                            <td><a href="#" onclick="eliminar_venta('${id_row}',${cant_ventas});" class="btn btn-circle btn-sm btn-danger" title="Eliminar"><i class="fa fa-solid fa-trash"></i></a></td>
+                                        </tr>`;
+                }
+
+                articulo_eliminar[titulo_productos][cant_ventas] = true;
+
+                if (count % 2 === 1) {
+                    sumaImportes = sumaImportes + parseFloat(importe_temp);
+                }else{
+                    sumaImportes = sumaImportes + parseFloat(importe_det); 
+                }
+                sumaImportes = parseFloat(sumaImportes.toFixed(2));
+                let tasa = document.getElementById('tasa_imp').value;
+                document.getElementById('tasa').innerHTML = tasa;
+                document.getElementById('importes_total').innerHTML = sumaImportes.toFixed(2);
+                $(".importes_total").val(sumaImportes.toFixed(2));
+                tasa = sumaImportes*(tasa/100);    //tasa total
+                if (count % 2 === 1) {
+                    total = sumaImportes;//TOTAL-FINAL  Importe +Impuesto
+                }else{
+                    total = sumaImportes + tasa;//TOTAL-FINAL  Importe+Impuesto
+                }
+                document.getElementById('impuesto').innerHTML = tasa.toFixed(2); //SPAN
+                $(".impuesto").val(tasa.toFixed(2));              //INPUT
+                                     
+                document.getElementById('venta_total').innerHTML = total.toFixed(2);  //imprime el TOTAL-FINAL en id - SPAN
+                $(".venta_total").val(total.toFixed(2));  //imprime el TOTAL-FINAL en id -INPUT
+                
+                $('#articulo_id').val("").trigger('change');   //Limpia los select
+                $('#nombre_mercancia_art').val("");            //Limpian campos
+                $('#stock_venta_det').val("");
+                $('#precio_venta_det').val("");
+                $("#" + tbody_datos).append(datos_fila);  
+                //cosa nueva 2
+                var element = document.getElementById("forma_descuento");
+                element.selectedIndex = 0;
+                $('#descuento').val("");
+                document.getElementById('descuento_tipo_input').value = 0;
+                var element = document.getElementById("descuento_tipo");
+                element.textContent = "0";
+                $('#tipo_descuento_venta').val('sin descuento').trigger('change.select2');
+                $("#descuento").attr("disabled",true);
+                $("#forma_descuento").attr("disabled", true);
+                //fin cosa nueva 2
+            }else{
+            Swal.fire({
+                html: 'No se admite registrar 2 veces el mismo articulo - Intente en la próxima compra',
+                icon: 'warning',
+            })
+            }
+            cant_ventas++;
+        
+            $("#servicio_titulo").val(JSON.stringify(contadorArticulos));
+        }else{
+            Swal.fire({
+            html: 'Advertencia - Titulo es un campo obligatorio',
+            icon: 'warning',
+            })
+        }
+        /*
+    }else{
+        Swal.fire({
+                html: 'Advertencia: No se admite campos vacios',
+                icon: 'warning',
+            })
+    }*/
+}
